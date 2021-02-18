@@ -1,7 +1,6 @@
 ### data and plots
-.png
+*.png
 data/
-
 
 # Created by https://www.toptal.com/developers/gitignore/api/vscode,macos,python
 # Edit at https://www.toptal.com/developers/gitignore?templates=vscode,macos,python
