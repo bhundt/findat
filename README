@@ -1,1 +1,3 @@
 Some small python scripts for plotting stock market indicators such as Put- / Call-Rations, Volatility-Index.
+
+The data is obtained from yahoo and parsed from CBOE.   
