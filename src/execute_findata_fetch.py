@@ -1,14 +1,22 @@
-#!/usr/bin/env python3
 import os
 import ssl
 ssl._create_default_https_context = ssl._create_unverified_context
 
-import yfinance as yf
-import pandas as pd
+from datetime import timedelta
 import datetime as dt
-import numpy as np
 
+from airflow import DAG
+from airflow.operators.bash_operator import BashOperator
+from airflow.operators.python import PythonOperator
+from airflow.utils.dates import days_ago
+
+
+## Python Code
 def get_new_data():
+    import yfinance as yf
+    import pandas as pd
+    import numpy as np
+
     date_string = dt.datetime.now().strftime("%Y-%m-%d")
     
     # global finance data
@@ -33,9 +41,15 @@ def get_new_data():
                     }, index=[0])
     print(result)
 
-    return result
+    return result.to_json(orient='records')
 
-def save_data_to_database(data, filename):
+def save_data_to_database(task_instance):
+    import pandas as pd
+    import numpy as np
+    
+    data = task_instance.xcom_pull(task_ids='fetch-new-data')
+    data = pd.read_json(data, orient='records')	
+    filename = '/app/airflow/findat/database.csv'
     # create empty file with correct headers if necessary
     if os.path.exists(filename) is not True:
         pd.DataFrame( {
@@ -59,14 +73,36 @@ def save_data_to_database(data, filename):
     # save to file
     df.to_csv(filename, sep=';', decimal='.', encoding='utf-8', index=False)
 
-def main():
-    data = get_new_data()
-    save_data_to_database(data, 'data/database.csv')
+#def fetch_data():
+#    data = get_new_data()
+#    save_data_to_database(data, '/app/airflow/findat/database.csv')
 
-if __name__ == "__main__":
-    # we assume this code is in /src while data is in /data. Since we do not want to assume a cwd we switch to src and than move one up
-    path = os.path.dirname(os.path.realpath(__file__))
-    os.chdir(path)
-    os.chdir(os.path.pardir)
+## DAG
+default_args = {
+    'owner': 'airflow',
+    'depends_on_past': False,
+    'start_date': days_ago(1),
+    'retries': 5,
+    'retry_delay': timedelta(minutes=1),
+}
 
-    main()
+dag = DAG(
+    'execute-findata-fetch',
+    default_args=default_args,
+    schedule_interval='30 7 * * *',
+    catchup=False,
+)
+
+fetch_new_data = PythonOperator(
+    task_id='fetch-new-data',
+    python_callable=get_new_data,
+    dag=dag,
+)
+
+store_new_data = PythonOperator(
+   task_id='store-new-data',
+   python_callable=save_data_to_database,
+   dag=dag
+)
+
+fetch_new_data >> store_new_data
