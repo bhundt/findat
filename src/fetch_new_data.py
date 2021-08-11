@@ -15,6 +15,9 @@ def get_new_data():
     sp500 = yf.Ticker('^GSPC')
     vix = yf.Ticker('^VIX')
     vix3m = yf.Ticker('^VIX3M')
+    
+    #all_world_etf = yf.Ticker('VWRL.AS')
+    #print(all_world_etf.info['regularMarketPreviousClose'])
 
     # Put/Call Ratios
     cboe_data = pd.read_html('https://markets.cboe.com/us/options/market_statistics/daily/')[0]

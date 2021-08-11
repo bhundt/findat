@@ -1,6 +1,7 @@
-### data and plots
+### data and plots and credentials
 data/
 conf/
+.venv
 
 # Created by https://www.toptal.com/developers/gitignore/api/vscode,macos,python
 # Edit at https://www.toptal.com/developers/gitignore?templates=vscode,macos,python
