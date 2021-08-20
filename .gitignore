@@ -3,6 +3,9 @@ data/
 conf/
 .venv/
 *.png
+archive
+*.csv
+*.pdf
 
 # Created by https://www.toptal.com/developers/gitignore/api/vscode,macos,python
 # Edit at https://www.toptal.com/developers/gitignore?templates=vscode,macos,python

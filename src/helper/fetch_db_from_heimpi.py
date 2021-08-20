@@ -11,9 +11,10 @@ def createSSHClient(server, port, user, password):
     return client
 
 
-# we assume this code is in /src while data is in /data. Since we do not want to assume a cwd we switch to src and than move one up
+# we assume this code is in /src/helper while data is in /data. Sincepip  we do not want to assume a cwd we switch to src and than move one up
 path = os.path.dirname(os.path.realpath(__file__))
 os.chdir(path)
+os.chdir(os.path.pardir)
 os.chdir(os.path.pardir)
 
 server_config = yaml.safe_load(open('conf/server.yaml', 'r'))
