@@ -1,5 +1,5 @@
 # FinDat
-Python scripts for retrieving and plotting stock market indicators such assentiments in social media,  Put- / Call-Rations, Volatility-Index, ...
+Python scripts for retrieving and plotting stock market indicators such as sentiments in social media,  Put- / Call-Rations, Volatility-Index, ...
 
 ## Indices and their meaning
 TOTAL_PCR: total amount of put to calls. Rising PCRs can indicate worsening market conditions.
